@@ -30,26 +30,39 @@ Bulk-check your contacts against the Shwapno grocery chain databreach. Feed it a
     └── report_YYYYMMDD_HHMMSS.txt
 ```
 
-## Quick start
+## Setup
 
-### With Docker (recommended)
+### 1. Add your contacts
+
+Create a `data/` directory and place your VCF file inside it. The file **must** have a `.vcf` extension. Any name works - the checker picks up the first `.vcf` it finds:
 
 ```bash
-# 1. Clone the repo
-git clone <repo-url> && cd mojarshopno
+mkdir -p data
+cp /path/to/your/contacts.vcf data/
+```
 
-# 2. Drop your VCF file into data/
-cp /path/to/contacts.vcf data/
+If you export from Android/Google Contacts/Telegram, the default export name is fine (e.g. `Contacts_20260328.vcf`).
 
-# 3. Run
+### 2. Configure (optional)
+
+Copy the example and edit values:
+
+```bash
+cp .env.example .env
+```
+
+### 3. Run
+
+#### With Docker (recommended)
+
+```bash
 docker compose run --rm checker
 ```
 
-### Without Docker
+#### Without Docker
 
 ```bash
 pip install -r requirements.txt
-cp /path/to/contacts.vcf data/
 python checker.py
 ```
 
