@@ -86,6 +86,19 @@ WORKERS=15 MAX_RETRIES=8 docker compose run --rm checker
 WORKERS=20 MAX_RETRIES=10 RETRY_DELAY=1 python checker.py
 ```
 
+## Single number lookup
+
+```bash
+# Direct
+python checker.py 01XXXXXXXXX
+
+# Docker
+docker compose run --rm checker 01XXXXXXXXX
+
+# Also accepts +880 or 880 prefix
+python checker.py +8801XXXXXXXXX
+```
+
 ## How to export your contacts as VCF
 
 **Android:** Settings > Google > Manage your Google Account > Data & Privacy > Download your data > Select "Contacts" > Export as vCard (.vcf)

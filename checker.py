@@ -1,5 +1,6 @@
 """Main entry point: load contacts from VCF, check all numbers in parallel, generate report."""
 
+import argparse
 import os
 import sys
 import json
@@ -9,7 +10,7 @@ from pathlib import Path
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from vcf_parser import parse_vcf
+from vcf_parser import parse_vcf, normalize_bd_phone
 from scraper import check_phone, CheckResult
 
 
@@ -184,5 +185,46 @@ def main() -> None:
     generate_reports(results, contact_names, Path("reports"))
 
 
+def lookup(phone: str) -> None:
+    """Check a single phone number."""
+    max_retries = int(os.environ.get("MAX_RETRIES", "5"))
+    retry_delay = float(os.environ.get("RETRY_DELAY", "2"))
+
+    normalized = normalize_bd_phone(phone)
+    if not normalized:
+        print(f"Invalid BD phone number: {phone}")
+        print("Format: 01XXXXXXXXX (11 digits), +88001XXXXXXXXX, or 88001XXXXXXXXX")
+        sys.exit(1)
+
+    print(f"Checking {normalized}...")
+    result = check_phone(normalized, max_retries, retry_delay)
+
+    if result.error:
+        print(f"ERROR: {result.error}")
+        sys.exit(1)
+
+    if not result.found:
+        print(f"SAFE - {normalized} is not in the breach database.")
+        return
+
+    print(f"\nFOUND IN BREACH")
+    print(f"  Name:   {result.name}")
+    print(f"  Code:   {result.code}")
+    print(f"  Mobile: {result.mobile}")
+    print(f"  Items:  {result.item_count}")
+    if result.purchases:
+        print(f"\n  Purchase History:")
+        for p in result.purchases:
+            print(f"    - {p.product}")
+            print(f"      {p.date} | Qty {p.quantity} | {p.price} | {p.category}")
+
+
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Shwapno Databreach Checker")
+    parser.add_argument("phone", nargs="?", help="Single phone number to check (e.g. 01XXXXXXXXX)")
+    args = parser.parse_args()
+
+    if args.phone:
+        lookup(args.phone)
+    else:
+        main()
