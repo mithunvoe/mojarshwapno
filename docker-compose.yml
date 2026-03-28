@@ -1,0 +1,8 @@
+services:
+  checker:
+    build: .
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+    env_file:
+      - .env

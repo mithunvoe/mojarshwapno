@@ -1,0 +1,6 @@
+.env
+reports/
+data/
+__pycache__/
+*.pyc
+.playwright-mcp/
