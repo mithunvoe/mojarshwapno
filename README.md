@@ -86,21 +86,15 @@ WORKERS=15 MAX_RETRIES=8 docker compose run --rm checker
 WORKERS=20 MAX_RETRIES=10 RETRY_DELAY=1 python checker.py
 ```
 
-## Output
+## How to export your contacts as VCF
 
-Live progress while running:
+**Android:** Settings > Google > Manage your Google Account > Data & Privacy > Download your data > Select "Contacts" > Export as vCard (.vcf)
 
-```
-[42/325] Rana                      01714386942 -> FOUND  Rana (15 items) (3.1/s, ETA 91s)
-[43/325] Karim                     01812345678 -> SAFE (3.0/s, ETA 94s)
-```
+**Google Contacts (web):** Go to contacts.google.com > Export > Select "vCard" format > Export
 
-Final summary:
+**iPhone:** Use the iCloud Contacts web app (icloud.com/contacts) > Select All > Export vCard
 
-```
-Done in 118.6s
-  Found: 20/325
-```
+**Telegram:** Settings > Privacy & Security > Export Telegram Data > Check "Contacts" > Export
 
 ## Notes
 
